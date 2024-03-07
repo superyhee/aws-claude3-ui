@@ -3,6 +3,7 @@
 """General helper utilities here"""
 # Python Built-Ins:
 from io import StringIO
+import requests
 import re
 import sys
 import json
@@ -81,6 +82,28 @@ def generate_content(runtime, messages, system, params, model_id):
 
     return response_body
 
+
+def gene_content_api(messages, system, params, model_id):
+
+    url = 'https://qq65jwe3kd.execute-api.us-east-1.amazonaws.com/prod/v1/chat/completions'
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    params['system'] = system
+    params['messages'] = messages
+    params['model'] = model_id
+    body=json.dumps(params)
+
+    try:
+        response = requests.post(url, headers=headers, data=body, verify=False)
+        # response.raise_for_status()
+        response_text = json.loads(response.text)
+        return response_text
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
+    
 
 class ChatHistory:
     """Abstract class for storing chat message history."""
