@@ -1,4 +1,4 @@
-# AWS Bedrock Chat UI using Anthropic's Claude 3 Sonnet model
+# AWS Bedrock Chat UI using Claude 3 model
 
 What does it do?
 
@@ -10,7 +10,16 @@ What does it do?
 
 - Deploy a chat ui on AWS
 
-- `npm i` install
+Install Guide
+
+1.Automatically deploy api gateway and lambda and call bedrock through lambda.
+
+- `npm i` install required libray
+
 - `cdk deploy` deploy this stack to your default AWS account/region
-- `npx cdk diff` compare deployed stack with current state
-- `npx cdk synth` emits the synthesized CloudFormation template
+
+- `cdk diff` compare deployed stack with current state
+
+- `cdk synth` emits the synthesized CloudFormation template
+
+  2.deploy ui
