@@ -1,7 +1,7 @@
 # Copyright iX.
 # SPDX-License-Identifier: MIT-0
 import base64
-from utils import generate_content, ChatHistory
+from utils import gene_content_api, ChatHistory
 from . import bedrock_runtime
 
 
@@ -49,7 +49,7 @@ def text_chat(input_msg:str, chat_history:list, style:str):
         """
 
     # Get the llm reply
-    resp = generate_content(bedrock_runtime, chat_memory.messages, system_prompt, inference_params, model_id)
+    resp = gene_content_api(chat_memory.messages, system_prompt, inference_params, model_id)
     bot_reply = resp.get('content')[0].get('text')
     # add current conversation to chat memory and history
     chat_memory.add_bot_text(bot_reply)
@@ -73,7 +73,7 @@ def media_chat(media_path, chat_history:list):
     chat_memory.add_user_image(content_img)
 
     # Get the llm reply
-    resp = generate_content(bedrock_runtime, chat_memory.messages, system_prompt, inference_params, model_id)
+    resp = gene_content_api(chat_memory.messages, system_prompt, inference_params, model_id)
     bot_reply = resp.get('content')[0].get('text')
 
     # add current conversation to chat memory and history
