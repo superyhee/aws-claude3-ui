@@ -94,7 +94,7 @@ with Claude 3 models, you can also send image content blocks:
 
 ##### call API by curl:
 
-```json
+```bash
 curl -X POST -k -H 'Content-Type: application/json' -i 'https://api_gateway_url/v1/messages' --data '{
     "model": "anthropic.claude-3-sonnet-20240229-v1:0",
     "max_tokens": 1024,
