@@ -9,3 +9,8 @@ What does it do?
 - Creates an AWS API Gateway endpoint to expose the API
 
 - Deploy a chat ui on AWS
+
+- `npm i` install
+- `cdk deploy` deploy this stack to your default AWS account/region
+- `npx cdk diff` compare deployed stack with current state
+- `npx cdk synth` emits the synthesized CloudFormation template
