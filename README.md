@@ -9,6 +9,7 @@
 - Creates an AWS API Gateway endpoint to expose the API
 
 - Deploy a chat ui on AWS
+  ![0](images/arch.png)
 
 **CDK Useful commands**
 
