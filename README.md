@@ -10,9 +10,11 @@ What does it do?
 
 - Deploy a chat ui on AWS
 
-Install Guide
+### Install Guide
 
-1.Automatically deploy api gateway and lambda and call bedrock through lambda.
+#### 1.Deploy Infrastructure using Claude 3 model
+
+use aws cdk automatically deploy api gateway and lambda and call bedrock through lambda.
 
 - `npm i` install required libray
 
@@ -20,7 +22,7 @@ Install Guide
 
   ![0](images/cdk_output.png)
 
-#### API Guide:
+#####API Guide:
 
 ##### Create a Message:
 
