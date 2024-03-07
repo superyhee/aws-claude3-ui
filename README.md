@@ -1,6 +1,6 @@
 # AWS Bedrock Chat UI using Claude 3 model
 
-What does it do?
+**What does it do?**
 
 - Creates an AWS Lambda function that interacts with AWS Bedrock
 
@@ -10,15 +10,33 @@ What does it do?
 
 - Deploy a chat ui on AWS
 
+**CDK Useful commands**
+
+- npm install install dependencies
+- cdk list list up stacks
+- cdk deploy deploy this stack to your default AWS account/region
+- cdk diff compare deployed stack with current state
+- cdk synth emits the synthesized CloudFormation template
+
+**Prerequisites**
+
+First of all, AWS Account and IAM User is required. And then the following modules must be installed.please refer the [guide](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_prerequisites)
+
+- AWS CLI: aws configure --profile [profile name]
+- Node.js: node --version
+- AWS CDK: cdk --version
+
 ### Install Guide
 
 #### 1.Deploy Infrastructure using Claude 3 model
 
 use aws cdk automatically deploy api gateway and lambda and call bedrock through lambda.
 
-- `npm i` install required libray
+- install CDK: npm install -g aws-cdk
 
-- `cdk deploy` deploy this stack to your default AWS account/region，get output api gateway url:
+- install required libray:`npm i`
+
+- deploy this stack to your default AWS account/region，get output api gateway url: `cdk deploy`
 
   ![0](images/cdk_output.png)
 
@@ -131,4 +149,13 @@ Response message:
 }
 ```
 
-### 2.deploy ui
+### 2.Deploy ui
+
+1.Config API_SERVER value of .env under ui directory.
+
+2.Build docker image and run ui container
+
+```bash
+docker build -t claude-ui .
+docker run --env-file .env  -p 5006:5006  claude-ui
+```

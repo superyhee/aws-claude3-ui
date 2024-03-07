@@ -44,8 +44,10 @@ export class AwsClaude3UiStack extends cdk.Stack {
     });
 
     const version = api.root.addResource("v1");
+    //const chat = version.addResource("chat");
     const messages = version.addResource("messages");
     // const completions = chat.addResource("completions");
     messages.addMethod("ANY"); // GET /items/{item}
+    // completions.addMethod("ANY");
   }
 }

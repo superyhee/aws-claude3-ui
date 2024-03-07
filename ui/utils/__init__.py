@@ -84,8 +84,9 @@ def generate_content(runtime, messages, system, params, model_id):
 
 
 def gene_content_api(messages, system, params, model_id):
-
-    url = 'https://qq65jwe3kd.execute-api.us-east-1.amazonaws.com/prod/v1/chat/completions'
+   
+    url = os.getenv('API_SERVER')
+  
     headers = {
         'Content-Type': 'application/json'
     }
