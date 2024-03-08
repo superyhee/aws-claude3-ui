@@ -11,6 +11,7 @@
 - Converts the API of Claude3 model to the OpenAI Chat API format
 
 - Deploy a Chat UI on AWS
+
   ![0](images/arch.png)
 
 **CDK Useful commands**
@@ -159,7 +160,7 @@ Response message:
 An example OpenAI messages API call looks like the following:
 
 ```bash
-curl -X POST -k -H 'Content-Type: application/json' -i 'https://api_gateway_url/v1/chat' --data '{
+curl -X POST -k -H 'Content-Type: application/json' -i 'https://api_gateway_url/v1/chat/completions' --data '{
     "model": "anthropic.claude-3-sonnet-20240229-v1:0",
     "max_tokens": 1024,
     "top_k":1,
