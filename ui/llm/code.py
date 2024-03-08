@@ -1,7 +1,7 @@
 # Copyright iX.
 # SPDX-License-Identifier: MIT-0
-from utils import format_message, gene_content_api
-# from . import bedrock_runtime
+from utils import format_message
+from . import gene_content_api
 
 
 model_id = "anthropic.claude-3-sonnet-20240229-v1:0"

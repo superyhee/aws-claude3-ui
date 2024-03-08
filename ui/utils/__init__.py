@@ -3,10 +3,8 @@
 """General helper utilities here"""
 # Python Built-Ins:
 from io import StringIO
-import requests
 import re
 import sys
-import json
 import textwrap
 
 
@@ -71,41 +69,6 @@ def format_message(content, role, msg_type):
     return base_msg
 
 
-# Helper function to pass prompts and inference parameters
-def generate_content(runtime, messages, system, params, model_id):
-    params['system'] = system
-    params['messages'] = messages
-    body=json.dumps(params)
-    
-    response = runtime.invoke_model(body=body, modelId=model_id)
-    response_body = json.loads(response.get('body').read())
-
-    return response_body
-
-
-def gene_content_api(messages, system, params, model_id):
-   
-    url = os.getenv('API_SERVER')
-  
-    headers = {
-        'Content-Type': 'application/json'
-    }
-
-    params['system'] = system
-    params['messages'] = messages
-    params['model'] = model_id
-    body=json.dumps(params)
-
-    try:
-        response = requests.post(url, headers=headers, data=body, verify=False)
-        # response.raise_for_status()
-        response_text = json.loads(response.text)
-        return response_text
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        return None
-    
-
 class ChatHistory:
     """Abstract class for storing chat message history."""
 
@@ -151,3 +114,30 @@ class ChatHistory:
 
     def get_latest_message(self):
         return self.messages[-1] if self.messages else None
+
+class AppConf:
+    """
+    A class to store and manage app configuration.
+    """
+
+    # Constants
+    STYLES = ["正常", "幽默", "极简", "理性", "可爱"]
+    LANGS = ["en_US", "zh_CN", "zh_TW", "ja_JP", "de_DE", "fr_FR"]
+    CODELANGS = ["Python", "Shell", "HTML", "Javascript", "Typescript", "Yaml", "GoLang", "Rust"]
+    PICSTYLES = [
+        "增强(enhance)", "照片(photographic)", "老照片(analog-film)",
+        "电影(cinematic)", "模拟电影(analog-film)", "美式漫画(comic-book)",  "动漫(anime)", "线稿(line-art)",
+        "3D模型(3d-model)", "低多边形(low-poly)", "霓虹朋克(neon-punk)", "复合建模(modeling-compound)",
+        "数字艺术(digital-art)", "奇幻艺术(fantasy-art)", "像素艺术(pixel-art)", "折纸艺术(origami)"
+    ]
+
+    # Variables, initialize with default values.
+    api_server = 'https://mtx50apnb6.execute-api.us-east-1.amazonaws.com/prod/v1/messages'
+    model_id = 'anthropic.claude-3-sonnet-20240229-v1:0'
+
+    def update(self, key, value):
+        # Update the value of a variable.
+        if hasattr(self, key):
+            setattr(self, key, value)
+        else:
+            raise AttributeError(f"Invalid configuration variable: {key}")

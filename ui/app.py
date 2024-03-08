@@ -1,21 +1,8 @@
 # Copyright iX.
 # SPDX-License-Identifier: MIT-0
 import gradio as gr
-from llm import claude3, text, code, image
-# from utils import common
-
-
-
-LANGS = ["en_US", "zh_CN", "zh_TW", "ja_JP", "de_DE", "fr_FR"]
-STYLES = ["正常", "幽默", "极简", "理性", "可爱"]
-CODELANGS = ["Python", "Shell", "HTML", "Javascript", "Typescript", "Yaml", "GoLang", "Rust"]
-# PICSTYLES = [
-#     "增强(enhance)", "照片(photographic)", "老照片(analog-film)",
-#     "电影(cinematic)", "模拟电影(analog-film)", "美式漫画(comic-book)",  "动漫(anime)", "线稿(line-art)",
-#     "3D模型(3d-model)", "低多边形(low-poly)", "霓虹朋克(neon-punk)", "复合建模(modeling-compound)",
-#     "数字艺术(digital-art)", "奇幻艺术(fantasy-art)", "像素艺术(pixel-art)", "折纸艺术(origami)"
-# ]
-# Login_USER = ''
+from llm import chatbot, text, code, image
+from utils import common, AppConf
 
 
 # def login(username, password):
@@ -63,10 +50,10 @@ with gr.Blocks() as tab_claude:
         with gr.Row():
             btn_clear = gr.ClearButton([input_msg, chatbox], value='🗑️ Clear')
             btn_forget = gr.Button('💊 Forget All', scale=1, min_width=150)
-            btn_forget.click(claude3.clear_memory, None, chatbox)
+            btn_forget.click(chatbot.clear_memory, None, chatbox)
             btn_flag = gr.Button('🏁 Flag', scale=1, min_width=150)
         with gr.Accordion(label='Chatbot Style', open=False):
-            input_style = gr.Radio(label="Chatbot Style", choices=STYLES, value="正常", show_label=False)
+            input_style = gr.Radio(label="Chatbot Style", choices=AppConf.STYLES, value="正常", show_label=False)
         
         saved_msg = gr.State()
         # saved_chats = (
@@ -75,13 +62,13 @@ with gr.Blocks() as tab_claude:
         media_msg = btn_file.upload(
             post_media, [btn_file, chatbox], [chatbox], queue=False
         ).then(
-            claude3.media_chat, [btn_file, chatbox], chatbox
+            chatbot.media_chat, [btn_file, chatbox], chatbox
         )
 
         input_msg.submit(
             post_text, [input_msg, chatbox], [input_msg, saved_msg, chatbox], queue=False
         ).then(
-            claude3.text_chat, [saved_msg, chatbox, input_style], chatbox
+            chatbot.text_chat, [saved_msg, chatbox, input_style], chatbox
         ).then(
             # restore interactive for input textbox
             lambda: gr.Textbox(interactive=True), None, input_msg
@@ -90,7 +77,7 @@ with gr.Blocks() as tab_claude:
         btn_submit.click(
             post_text, [input_msg, chatbox], [input_msg, saved_msg, chatbox], queue=False
         ).then(
-            claude3.text_chat, [saved_msg, chatbox, input_style], [chatbox]
+            chatbot.text_chat, [saved_msg, chatbox, input_style], [chatbox]
         ).then(lambda: gr.Textbox(interactive=True), None, input_msg)
 
 
@@ -99,7 +86,7 @@ tab_translate = gr.Interface(
     inputs=[
         gr.Textbox(label="Original", lines=7),
         gr.Dropdown(label="Source Language", choices=['auto'], value='auto', container=False),
-        gr.Dropdown(label="Target Language", choices=LANGS, value='en_US')
+        gr.Dropdown(label="Target Language", choices=AppConf.LANGS, value='en_US')
     ],
     outputs=gr.Textbox(label="Translated", lines=11, scale=5),
     examples=[["Across the Great Wall we can reach every corner of the world.", "auto", "zh_CN"]],
@@ -113,7 +100,7 @@ tab_rewrite = gr.Interface(
     inputs=[
         gr.Textbox(label="Original", lines=7, scale=5),
         # gr.Accordion(),
-        gr.Radio(label="Style", choices=STYLES, value="正常", scale=1)
+        gr.Radio(label="Style", choices=AppConf.STYLES, value="正常", scale=1)
     ],
     outputs=gr.Textbox(label="Polished", lines=11, scale=5),
     examples=[["人工智能将对人类文明的发展产生深远影响。", "幽默"]],
@@ -140,7 +127,7 @@ with gr.Blocks() as tab_code:
         with gr.Column(scale=6, min_width=500):
             input_requirement =  gr.Textbox(label="Describe your requirements:", lines=4)         
         with gr.Column(scale=2, min_width=100):
-            input_lang = gr.Radio(label="Programming Language", choices=CODELANGS, value="Python")
+            input_lang = gr.Radio(label="Programming Language", choices=AppConf.CODELANGS, value="Python")
     with gr.Row():
         # 输出代码结果
         with gr.Column(scale=6, min_width=500):
@@ -155,7 +142,7 @@ with gr.Blocks() as tab_code:
         error_box = gr.Textbox(label="Error", visible=False)
 
 
-with gr.Blocks() as format_code:
+with gr.Blocks() as tab_format:
     description = gr.Markdown("A JSON Formatter... (Powered by Claude3 Sonnet v1)")
     with gr.Row():
         # 输入需求
@@ -215,10 +202,24 @@ with gr.Blocks() as format_code:
 #     with gr.Tab("Image-Image"):
 #         gr.Markdown('TBD')
 
+def update_api(url):
+    AppConf.api_server = url
+    gr.Info("API server changed.")
+
+with gr.Blocks() as tab_setting:
+    description = gr.Markdown("App Settings")
+    with gr.Row():
+        with gr.Column(scale=15):
+            # tobeFix: cannot get the value of global variable
+            input_url = gr.Textbox(AppConf.api_server, label="API URL", max_lines=1)
+        with gr.Column(scale=1):
+            btn_submit = gr.Button(value='Update', min_width=150)
+            btn_submit.click(update_api, input_url, None)
+
 
 app = gr.TabbedInterface(
-    [tab_claude, tab_translate, tab_rewrite, tab_summary, tab_code, format_code], 
-    tab_names= ["Claude 🤖", "Translate 🇺🇳", "ReWrite ✍🏼", "Summary 📰", "Code 💻", "JSON 🔣"],
+    [tab_claude, tab_translate, tab_rewrite, tab_summary, tab_code, tab_format, tab_setting], 
+    tab_names= ["Chatbot 🤖", "Translate 🇺🇳", "ReWrite ✍🏼", "Summary 📰", "Code 💻", "JSON 🔣", "Setting ⚙️"],
     title="AI ToolBox",
     theme="Base",
     css="footer {visibility: hidden}"
