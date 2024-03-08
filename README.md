@@ -8,7 +8,9 @@
 
 - Creates an AWS API Gateway endpoint to expose the API
 
-- Deploy a chat ui on AWS
+- Converts the API of Claude3 model to the OpenAI Chat API format
+
+- Deploy a Chat UI on AWS
   ![0](images/arch.png)
 
 **CDK Useful commands**
@@ -41,7 +43,7 @@ use aws cdk automatically deploy api gateway and lambda and call bedrock through
 
   ![0](images/cdk_output.png)
 
-#####API Guide:
+##### API Guide:
 
 ##### Create a Message:
 
@@ -113,7 +115,9 @@ with Claude 3 models, you can also send image content blocks:
 }
 ```
 
-##### call API by curl:
+##### Call API in claude's format by curl: /v1/messages
+
+An example Claude messages API call looks like the following:
 
 ```bash
 curl -X POST -k -H 'Content-Type: application/json' -i 'https://api_gateway_url/v1/messages' --data '{
@@ -146,6 +150,49 @@ Response message:
   "usage": {
     "input_tokens": 20,
     "output_tokens": 19
+  }
+}
+```
+
+#### Call API in openai's format by curl: /v1/chat/completions
+
+An example OpenAI messages API call looks like the following:
+
+```bash
+curl -X POST -k -H 'Content-Type: application/json' -i 'https://api_gateway_url/v1/chat' --data '{
+    "model": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "max_tokens": 1024,
+    "top_k":1,
+    "temperature":0.5,
+    "messages": [
+        {"role": "user", "content": "Hello, Claude"}
+    ]
+}'
+```
+
+backend wil convert claude response to Openai compatible response message:
+
+```json
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Hello! It's nice to meet you. How can I assist you today?",
+        "role": "assistant"
+      },
+      "logprobs": null
+    }
+  ],
+  "created": 1709880244,
+  "id": "msg_013gmWn1hnxqzAB2ku56u818",
+  "model": "claude-3-sonnet-28k-20240229",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 19,
+    "prompt_tokens": 10,
+    "total_tokens": 29
   }
 }
 ```
