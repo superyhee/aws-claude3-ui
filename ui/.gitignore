@@ -14,7 +14,7 @@ dist/
 node_modules
 
 # Environments
-.env
+
 .venv
 env/
 venv/
