@@ -116,7 +116,7 @@ with Claude 3 models, you can also send image content blocks:
 }
 ```
 
-##### Call API in claude's format by curl: /v1/messages
+### Call API in claude's format by curl: /v1/messages
 
 An example Claude messages API call looks like the following:
 
@@ -155,7 +155,7 @@ Response message:
 }
 ```
 
-#### Call API in openai's format by curl: /v1/chat/completions
+### Call API in openai's format by curl: /v1/chat/completions
 
 An example OpenAI messages API call looks like the following:
 
