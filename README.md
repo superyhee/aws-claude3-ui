@@ -210,3 +210,7 @@ docker run --env-file .env  -p 5006:5006  claude-ui
 ```
 
 ![0](images/ui.png)
+
+3.You can also change the API server in the settings tab.
+
+![setting](images/ui-setting.png)

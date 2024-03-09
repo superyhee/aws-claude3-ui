@@ -43,30 +43,31 @@ def format_message(content, role, msg_type):
     if msg_type not in MESSAGE_TYPES:
         raise ValueError(f"Invalid message type: {msg_type}")
 
-    base_msg = {"role": role, "content": []}
-
     match msg_type:
         case "text":
-            base_msg["content"] = [{"type": "text", "text": content}]
+            formated_msg = {"role": role, "content": content}
         case "image":
-            base_msg["content"] = [
-                {
-                    "type": "image",
-                    "source": {
-                        "type": "base64",
-                        "media_type": "image/jpeg",
-                        "data": content
+            formated_msg = {
+                "role": role,
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": "image/jpeg",
+                            "data": content
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "text": "Explain the image in detail."
                     }
-                },
-                {
-                    "type": "text",
-                    "text": "Describe what you understand from the content in this picture, as much detail as possible."
-                }
-            ]
+                ]
+            }
         case _:                      
             pass
 
-    return base_msg
+    return formated_msg
 
 
 class ChatHistory:
@@ -132,7 +133,7 @@ class AppConf:
     ]
 
     # Variables, initialize with default values.
-    api_server = 'https://mtx50apnb6.execute-api.us-east-1.amazonaws.com/prod/v1/messages'
+    api_server = 'https://mtx50apnb6.execute-api.us-east-1.amazonaws.com/prod/v1/messages00'
     model_id = 'anthropic.claude-3-sonnet-20240229-v1:0'
 
     def update(self, key, value):

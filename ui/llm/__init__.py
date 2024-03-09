@@ -50,8 +50,8 @@ def generate_content(runtime, messages, system, params, model_id):
 
 def gene_content_api(messages, system, params, model_id):
    
-    # url = os.getenv('API_SERVER')
-    url = AppConf.api_server
+    if os.getenv('API_SERVER'):
+        AppConf.api_server = os.getenv('API_SERVER')
   
     headers = {
         'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ def gene_content_api(messages, system, params, model_id):
     body=json.dumps(params)
 
     try:
-        response = requests.post(url, headers=headers, data=body, verify=False)
+        response = requests.post(AppConf.api_server, headers=headers, data=body, verify=False)
         response.raise_for_status()
         print(response)
         response_text = json.loads(response.text)

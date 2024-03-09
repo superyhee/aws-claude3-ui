@@ -6,7 +6,6 @@ from utils import common, AppConf
 
 
 # def login(username, password):
-#     global Login_USER
 #     if common.verify_user(username, password):
 #         # If a new user logs in, clear the history by default
 #         if username != Login_USER:
@@ -19,12 +18,12 @@ from utils import common, AppConf
 def post_text(message, history):
     '''post message on the chatbox before get LLM response'''
     # history = history + [(message, None)]
-    history.append((message, None))
+    history.append([message, None])
     return gr.Textbox(value="", interactive=False), message, history
 
 def post_media(file, history):
     '''post media on the chatbox before get LLM response'''
-    history.append(((file.name,), None))
+    history.append([(file.name,), None])
     return history
     
 
@@ -55,6 +54,7 @@ with gr.Blocks() as tab_claude:
         with gr.Accordion(label='Chatbot Style', open=False):
             input_style = gr.Radio(label="Chatbot Style", choices=AppConf.STYLES, value="正常", show_label=False)
         
+        # temp save user message
         saved_msg = gr.State()
         # saved_chats = (
         #     gr.State(chatbot.value) if chatbot.value else gr.State([])
