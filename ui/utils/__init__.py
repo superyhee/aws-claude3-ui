@@ -133,7 +133,7 @@ class AppConf:
     ]
 
     # Variables, initialize with default values.
-    api_server = 'https://mtx50apnb6.execute-api.us-east-1.amazonaws.com/prod/v1/messages00'
+    api_server = 'https://fake-url.execute-api.us-east-1.amazonaws.com/prod/v1/messages'
     model_id = 'anthropic.claude-3-sonnet-20240229-v1:0'
 
     def update(self, key, value):

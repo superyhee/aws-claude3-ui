@@ -21,6 +21,11 @@ boto3_bedrock = bedrock.get_bedrock_client(
     runtime=False
 )
 
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html#model-ids-arns
+# model_id = "anthropic.claude-v2:1"
+# model_id = 'anthropic.claude-instant-v1'
+# model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
+
 
 def test_connection():
     # Validate the connection

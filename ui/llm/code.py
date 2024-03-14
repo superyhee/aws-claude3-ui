@@ -1,10 +1,9 @@
 # Copyright iX.
 # SPDX-License-Identifier: MIT-0
-from utils import format_message
+from utils import AppConf, format_message
 from . import gene_content_api
 
 
-model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
 
 inference_params = {
     "anthropic_version": "bedrock-2023-05-31",
@@ -34,7 +33,7 @@ def gen_code(requirement, program_language):
     message_arch = [format_message(prompt_arch, 'user', 'text')]
 
     # Get the llm reply
-    resp_arch = gene_content_api( message_arch, system_arch, inference_params, model_id)
+    resp_arch = gene_content_api( message_arch, system_arch, inference_params, AppConf.model_id)
     instruction = resp_arch.get('content')[0].get('text')
 
     # Define system prompt for coder
@@ -58,13 +57,13 @@ def gen_code(requirement, program_language):
     message_coder = [format_message(prompt_coder, 'user', 'text')]
 
     # Get the llm reply
-    resp_coder = gene_content_api(message_coder, system_coder, inference_params, model_id)
+    resp_coder = gene_content_api(message_coder, system_coder, inference_params, AppConf.model_id)
     code_explanation = resp_coder.get('content')[0].get('text')
 
     return code_explanation
 
 
-def format_code(text, target_format):
+def format_txt(text, target_format):
     if text == '':
         return "Please input any text first."
     
@@ -80,7 +79,7 @@ def format_code(text, target_format):
         John Doe is 35-year-old, he lived in New York, he enjoys a variety of leisure activities such as reading, hiking and traveling.
         </input_example>
 
-        Then you parse the text content and structure it into a valid JSON object with key/value pairs, like the output_example:
+        Then you parse the text content and structure it into a valid JSON or YAML with key/value pairs, here is a JSON output example:
         <output_example>
         {{
             "Name": "John Doe",
@@ -92,20 +91,20 @@ def format_code(text, target_format):
                 "Traveling"
             ]
         }}
-        <output_example>
+        </output_example>
         """
     
     prompt_format = f"""
-        Write code according to the following instructions:
-        <instruction>
+        Convert the following text to {target_format} format:
+        <input>
         {text}
-        </instruction>
+        </input>
     """
 
     message_coder = [format_message(prompt_format, 'user', 'text')]
 
     # Get the llm reply
-    resp = gene_content_api(message_coder, system_format, inference_params, model_id)
+    resp = gene_content_api(message_coder, system_format, inference_params, AppConf.model_id)
     formated_code = resp.get('content')[0].get('text')
 
     return formated_code

@@ -1,15 +1,10 @@
 # Copyright iX.
 # SPDX-License-Identifier: MIT-0
 import base64
-from utils import ChatHistory
+from utils import ChatHistory, AppConf
 from . import gene_content_api
 # from . import bedrock_runtime
 
-
-# https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html#model-ids-arns
-# model_id = "anthropic.claude-v2:1"
-# model_id = 'anthropic.claude-instant-v1'
-model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
 
 
 inference_params = {
@@ -51,7 +46,7 @@ def text_chat(input_msg:str, chat_history:list, style:str):
         """
 
     # Get the llm reply
-    resp = gene_content_api(chat_memory.messages, system_prompt, inference_params, model_id)
+    resp = gene_content_api(chat_memory.messages, system_prompt, inference_params, AppConf.model_id)
     bot_reply = resp.get('content')[0].get('text')
     # add current conversation to chat memory and history
     chat_memory.add_bot_text(bot_reply)
@@ -75,7 +70,7 @@ def media_chat(media_path, chat_history:list):
     chat_memory.add_user_image(content_img)
 
     # Get the llm reply
-    resp = gene_content_api(chat_memory.messages, system_prompt, inference_params, model_id)
+    resp = gene_content_api(chat_memory.messages, system_prompt, inference_params, AppConf.model_id)
     bot_reply = resp.get('content')[0].get('text')
 
     # add current conversation to chat memory and history
@@ -84,6 +79,7 @@ def media_chat(media_path, chat_history:list):
 
     # send <chat history> back to Chatbot
     return chat_history
+
 
 def clear_memory():
     chat_memory.clear()
