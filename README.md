@@ -4,7 +4,7 @@
 
 - Creates an AWS Lambda function that interacts with AWS Bedrock
 
-- Uses Anthropic's Claude 3 Sonnet model for chat
+- Uses Anthropic's Claude 3 Sonnet and Haiku model for chat
 
 - Creates an AWS API Gateway endpoint to expose the API
 
@@ -52,11 +52,24 @@ Send a structured list of input messages with text and/or image content, and the
 
 The Messages API can be used for for either single queries or stateless multi-turn conversations.
 
-Example with a single user message:
+Example with a single user message with sonnect:
 
 ```json
 {
   "model": "anthropic.claude-3-sonnet-20240229-v1:0",
+  "max_tokens": 1024,
+  "top_k": 1,
+  "temperature": 0.5,
+  "system": "Today is January 1, 2024.",
+  "messages": [{ "role": "user", "content": "Hello, Claude" }]
+}
+```
+
+Example with a single user message with haiku:
+
+```json
+{
+  "model": "anthropic.claude-3-haiku-20240307-v1:0",
   "max_tokens": 1024,
   "top_k": 1,
   "temperature": 0.5,
