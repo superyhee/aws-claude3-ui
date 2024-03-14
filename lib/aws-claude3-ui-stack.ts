@@ -28,7 +28,7 @@ export class AwsClaude3UiStack extends cdk.Stack {
 
     model_runner.addToRolePolicy(
       new PolicyStatement({
-        actions: ["bedrock:InvokeModel"],
+        actions: ["bedrock:*"],
         resources: [`arn:aws:bedrock:${cdk.Aws.REGION}::foundation-model/*`],
       })
     );

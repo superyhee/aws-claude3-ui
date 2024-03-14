@@ -99,14 +99,14 @@ export const handler: Handler = async (event, context) => {
       let convertedMessages = isClaude
         ? body.messages
         : openaiToClaudeParams(body.messages);
-      console.log("messages---", convertedMessages);
+      console.log("begin invoke message", convertedMessages);
       if (convertedMessages.length <= 0) return badResponse;
       let max_tokens = body.max_tokens || 1000;
       let top_p = body.top_p || 1;
       let top_k = body.top_k || 250;
-
+      let modelId = "anthropic.claude-3-sonnet-20240229-v1:0";
+      if (body.model.startsWith("anthropic")) modelId = body.model;
       let temperature = body.temperature || 0.5;
-      const modelId = "anthropic.claude-3-sonnet-20240229-v1:0";
       const contentType = "application/json";
       const rockerRuntimeClient = new BedrockRuntimeClient({
         region: process.env.REGION,
@@ -153,7 +153,7 @@ export const handler: Handler = async (event, context) => {
               2
             ),
       };
-      console.log("response", result);
+      console.log("invoke success response", result);
       return result;
     } else {
       return badResponse;
