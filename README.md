@@ -1,4 +1,5 @@
 # AWS Bedrock Chat UI using Claude 3 model
+# This project has moved to [https://github.com/aws-samples/aws-bedrock-claude3-ui](https://github.com/aws-samples/aws-bedrock-claude3-ui)
 
 **What does it do?**
 
